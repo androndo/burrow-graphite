@@ -1,7 +1,7 @@
 FROM golang
 
-COPY . /go/src/github.com/rgannu/burrow-graphite
-WORKDIR /go/src/github.com/rgannu/burrow-graphite
+COPY . /go/src/github.com/androndo/burrow-graphite
+WORKDIR /go/src/github.com/androndo/burrow-graphite
 
 RUN go get ./
 RUN go build
