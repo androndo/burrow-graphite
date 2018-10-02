@@ -36,6 +36,10 @@ func main() {
 			Name:  "interval",
 			Usage: "The interval(seconds) specifies how often to scrape burrow.",
 		},
+		cli.StringFlag{
+			Name:  "graphite-prefix",
+			Usage: "Graphite metrics prefix",
+		},
 	}
 
 	app.Action = func(c *cli.Context) error {
@@ -49,7 +53,7 @@ func main() {
 			os.Exit(1)
 		}
 
-    var graphitePort = 2003
+		var graphitePort = 2003
 		if !c.IsSet("graphite-port") {
 			fmt.Println("The graphite host is not set. Defaulting to 2003 (e.g. --graphite-port 2003)")
 		} else {
@@ -60,6 +64,13 @@ func main() {
 			fmt.Println("A scrape interval is required (e.g. --interval 30)")
 			os.Exit(1)
 		}
+		
+		var prefix = ""
+		if !c.IsSet("graphite-prefix") {
+			fmt.Println("The graphite metrics prefix is not set. Default prefix is nothing.")
+		} else {
+		    prefix = c.String("graphite-prefix")
+		}
 
 		done := make(chan os.Signal, 1)
 
@@ -67,7 +78,7 @@ func main() {
 
 		ctx, cancel := context.WithCancel(context.Background())
 
-		exporter := burrow_graphite.MakeBurrowExporter(c.String("burrow-addr"), c.String("graphite-host"), graphitePort, c.Int("interval"))
+		exporter := burrow_graphite.MakeBurrowExporter(c.String("burrow-addr"), c.String("graphite-host"), graphitePort, c.Int("interval"), prefix)
 		go exporter.Start(ctx)
 
 		<-done

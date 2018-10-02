@@ -18,6 +18,7 @@ type BurrowExporter struct {
 	graphitePort      int
 	interval          int
 	wg                sync.WaitGroup
+	graphitePrefix    string
 }
 
 func (be *BurrowExporter) processGroup(cluster, group string, gh *graphite.Graphite) {
@@ -151,7 +152,7 @@ func (be *BurrowExporter) scrape() {
 	log.WithField("timestamp", start.UnixNano()).Info("Scraping burrow...")
 
 	log.Info("Getting connection to the Graphite server")
-	gh, err := GetGraphiteConnection(be.graphiteHost, be.graphitePort)
+	gh, err := GetGraphiteConnection(be.graphiteHost, be.graphitePort, be.graphitePrefix)
   if err != nil {
 		log.WithFields(log.Fields{
 			"err": err,
@@ -215,11 +216,12 @@ func (be *BurrowExporter) mainLoop(ctx context.Context) {
 	}
 }
 
-func MakeBurrowExporter(burrowUrl string, graphiteHost string, graphitePort int, interval int) *BurrowExporter {
+func MakeBurrowExporter(burrowUrl string, graphiteHost string, graphitePort int, interval int, graphitePrefix string) *BurrowExporter {
 	return &BurrowExporter{
 		client:            MakeBurrowClient(burrowUrl),
 		graphiteHost:      graphiteHost,
 		graphitePort:      graphitePort,
 		interval:          interval,
+		graphitePrefix:    graphitePrefix,
 	}
 }

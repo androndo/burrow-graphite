@@ -33,5 +33,6 @@ docker run --add-host=dh:<burrow-ip> \
   --burrow-addr http://dh:8000 \
   --graphite-host <graphite-server-host> \
   --graphite-port 2003 \
+  --graphite-prefix <graphite-metrics-prefix> \
   --interval 30
 ```

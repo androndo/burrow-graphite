@@ -5,8 +5,8 @@ import (
 	"github.com/marpaia/graphite-golang"
 )
 
-func GetGraphiteConnection(graphiteHost string, graphitePort int) (*graphite.Graphite, error) {
-	gh, err := graphite.NewGraphite(graphiteHost, graphitePort)
+func GetGraphiteConnection(graphiteHost string, graphitePort int, prefix string) (*graphite.Graphite, error) {
+	gh, err := graphite.NewGraphiteWithMetricPrefix(graphiteHost, graphitePort, prefix)
   if err != nil {
     fmt.Println("Error in getting the Graphite connection", err)
     return nil, err
